@@ -1,13 +1,12 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "vec3.h"
-#include "ray.h"
-#include "color.h"
+
 #include "hittable.h"
 
 class sphere : public hittable{
     public:
+        sphere(const point3& center, double radius) : center(center), radius(radius), col(){}
         sphere(const point3& center, double radius, color sphere_color) : center(center), radius(radius), col(sphere_color){}
 
         const color sphere_color() const {return col;} 
