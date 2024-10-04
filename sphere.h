@@ -4,27 +4,47 @@
 #include "vec3.h"
 #include "ray.h"
 #include "color.h"
+#include "hittable.h"
 
-class sphere{
+class sphere : public hittable{
     public:
-        sphere(const point3& center, double radius, color sphere_color) : cent(center), rad(radius), col(sphere_color){}
+        sphere(const point3& center, double radius, color sphere_color) : center(center), radius(radius), col(sphere_color){}
 
-        const point3 center() const {return cent;}
-        const double radius() const {return rad;}
         const color sphere_color() const {return col;} 
 
-        bool hit(const ray& r){
+        bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override{
             // resolving at2 + bt + c = 0 if there is solution(s) then the ray hit the sphere at t1 and t2
-            vec3 oc = cent-r.origin();
+            vec3 oc = center-r.origin();
             double a = dot(r.direction(),r.direction());
-            double b = -2.0 * dot(r.direction(), oc);
-            double c = dot(oc,oc) - rad*rad;
-            double discriminant = b*b - 4*a*c;
-            return discriminant>=0;
+            double h = dot(r.direction(), oc);
+            double c = dot(oc,oc) - radius*radius;
+            double discriminant = h*h - a*c;
+            if (discriminant<0){
+                return false;
+            }
+            double sqrtd = std::sqrt(discriminant);
+
+
+
+            double root = (h-sqrtd)/a;
+            if (root <= ray_tmin || ray_tmax <= root){
+                root = (h+sqrtd)/a;
+                if (root <= ray_tmin || ray_tmax <= root){
+                    return false;
+                }
+            }
+
+            rec.t = root;
+            rec.p = r.at(rec.t);
+            vec3 outward_normal = (rec.p-center)/radius;
+            rec.set_face_normal(r,outward_normal);
+
+            return true;
+
         }
     private:
-        point3 cent;
-        double rad;
+        point3 center;
+        double radius;
         color col;
             
 };

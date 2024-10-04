@@ -2,13 +2,17 @@
 #include "ray.h"
 #include "vec3.h"
 #include "sphere.h"
+#include "hittable.h"
 
 #include <iostream>
 
 color ray_color(const ray& r){
-    sphere s(point3(0,0,-1),0.5,color(1,0,0));
-    if (s.hit(r)){
-        return s.sphere_color();
+    sphere s(point3(0,0,-1),0.5,color(1,1,1));
+    hit_record rec;
+    if (s.hit(r,0,100,rec)){
+        return (rec.normal+color(1,1,1))/2;
+
+        
     }
 
     
