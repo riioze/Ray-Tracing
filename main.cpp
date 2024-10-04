@@ -1,11 +1,20 @@
 #include "color.h"
 #include "ray.h"
 #include "vec3.h"
+#include "sphere.h"
 
 #include <iostream>
 
 color ray_color(const ray& r){
+    sphere s(point3(0,0,-1),0.5,color(1,0,0));
+    if (s.hit(r)){
+        return s.sphere_color();
+    }
+
+    
     vec3 unit_direction = unit_vector(r.direction());
+
+    //draw the backgroud if no object is reached
     auto a = 0.5*(unit_direction.y()+1.0);
     return (1.0-a)*color(1.0,1.0,1.0) + a*color(0.5,0.7,1.0);
 }
