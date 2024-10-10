@@ -11,7 +11,7 @@ class sphere : public hittable{
 
         const color sphere_color() const {return col;} 
 
-        bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override{
+        bool hit(const ray& r, interval ray_t, hit_record& rec) const override{
             // resolving at2 + bt + c = 0 if there is solution(s) then the ray hit the sphere at t1 and t2
             vec3 oc = center-r.origin();
             double a = dot(r.direction(),r.direction());
@@ -26,9 +26,9 @@ class sphere : public hittable{
 
 
             double root = (h-sqrtd)/a;
-            if (root <= ray_tmin || ray_tmax <= root){
+            if (!ray_t.surronds(root)){
                 root = (h+sqrtd)/a;
-                if (root <= ray_tmin || ray_tmax <= root){
+                if (!ray_t.surronds(root)){
                     return false;
                 }
             }
