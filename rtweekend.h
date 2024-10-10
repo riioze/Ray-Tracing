@@ -2,6 +2,7 @@
 #define RTWEEKEND_H
 
 #include <cmath>
+#include <cstdlib>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -31,6 +32,14 @@ double fast_inverse_sqrt(double number){
     y = y * (1.5 - (x2 * y * y));   // 1st iteration
     //      y  = y * ( 1.5 - ( x2 * y * y ) );   // 2nd iteration, this can be removed
     return y;
+}
+
+inline double random_double() {
+    return std::rand() /(RAND_MAX+1.0);
+}
+
+inline double random_double(double min, double max) {
+    return min + (max-min)*random_double();
 }
 
 // Common headers
