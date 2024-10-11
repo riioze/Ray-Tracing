@@ -6,10 +6,8 @@
 
 class sphere : public hittable{
     public:
-        sphere(const point3& center, double radius) : center(center), radius(radius), col(){}
-        sphere(const point3& center, double radius, color sphere_color) : center(center), radius(radius), col(sphere_color){}
-
-        const color sphere_color() const {return col;} 
+        sphere(const point3& center, double radius, shared_ptr<material> mat) : center(center), radius(std::fmax(0,radius)), mat(mat){}
+        
 
         bool hit(const ray& r, interval ray_t, hit_record& rec) const override{
             // resolving at2 + bt + c = 0 if there is solution(s) then the ray hit the sphere at t1 and t2
@@ -38,13 +36,15 @@ class sphere : public hittable{
             vec3 outward_normal = (rec.p-center)/radius;
             rec.set_face_normal(r,outward_normal);
 
+            rec.mat = mat;
+
             return true;
 
         }
     private:
         point3 center;
         double radius;
-        color col;
+        shared_ptr<material> mat;
             
 };
 
